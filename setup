@@ -1,14 +1,17 @@
 #!/bin/bash
 
-set -e
-
 USER_BIN_DIR="$HOME/.usr/local/bin"
+SCRIPT_DIR="$(dirname -- "$(readlink -f -- "$0";)";)"
 
 # Initializing
 if [[ ! -d "$USER_BIN_DIR" ]]; then
   mkdir -p $USER_BIN_DIR
-  echo "[INFO]: $USER_BIN_DIR created"
-  ln -s setup $USER_BIN_DIR/setup
+  echo "[INFO]: '$USER_BIN_DIR' directory created"
+  ln -s $SCRIPT_DIR/setup $USER_BIN_DIR/setup
+  echo "[INFO]: Setup script symlink created"
+  echo "export PATH=\"\$PATH:$USER_BIN_DIR\"" >> ~/.bash_profile
+  . ~/.bash_profile
+  echo "[INFO]: Bash profile updated"
 fi
 
 # Pre Setup
@@ -19,7 +22,7 @@ sudo steamos-readonly disable
 sudo pacman -Sy --noconfirm --needed mc networkmanager-l2tp strongswan samba
 
 # Configure Samba
-. ../samba.sh
+. $SCRIPT_DIR/samba/samba.sh
 
 # Post Setup
 sudo steamos-readonly enable
