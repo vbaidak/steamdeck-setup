@@ -1,23 +1,25 @@
 #!/bin/bash
 
+set -e
+
+USER_BIN_DIR="$HOME/.usr/local/bin"
+
+# Initializing
+if [[ ! -d "$USER_BIN_DIR" ]]; then
+  mkdir -p $USER_BIN_DIR
+  echo "[INFO]: $USER_BIN_DIR created"
+  ln -s setup $USER_BIN_DIR/setup
+fi
+
 # Pre Setup
 sudo steamos-readonly disable
 
 # Install Packages
-sudo pacman -Sy --noconfirm --needed --overwrite \* mc networkmanager-l2tp strongswan samba
+#sudo pacman -Sy --noconfirm --needed --overwrite \* mc networkmanager-l2tp strongswan samba
+sudo pacman -Sy --noconfirm --needed mc networkmanager-l2tp strongswan samba
 
 # Configure Samba
-if $(systemctl --all --type service | grep -q 'smb.service'); [ "$?" -ne 0 ]; then 
-  echo "Service 'smb' does not exist. Setting up"  
-  sudo smbpasswd -a deck
-  sudo cp -rf /home/deck/.etc/samba/smb.conf /etc/samba/smb.conf
-  sudo systemctl enable smb.service
-fi
-
-if $(systemctl is-active --quiet 'smb.service'); [ "$?" -ne 0 ]; then
-  echo "Service 'smb' not running. Starting up"
-  sudo systemctl start smb.service
-fi
+. ../samba.sh
 
 # Post Setup
 sudo steamos-readonly enable
