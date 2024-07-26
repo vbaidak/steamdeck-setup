@@ -6,6 +6,8 @@ if $(systemctl --all --type service | grep -q 'smb.service'); [ "$?" -ne 0 ]; th
   echo "Service 'smb' does not exist. Setting up"  
   sudo smbpasswd -a deck
   sudo cp -rf $SCRIPT_DIR/smb.conf /etc/samba/smb.conf
+  firewall-cmd --permanent --zone=public --add-service=samba
+  firewall-cmd --reload
   sudo systemctl enable smb.service
 fi
 
