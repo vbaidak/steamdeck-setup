@@ -12,6 +12,13 @@ if [[ ! -d "$USER_BIN_DIR" ]]; then
   echo "[INFO]: '$USER_BIN_DIR' directory created"
   ln -s $SCRIPT_DIR/setup $USER_BIN_DIR/setup
   echo "[INFO]: Setup script symlink created"
+
+  echo "[INFO]: Setting up aliases"
+  echo "" >> ~/.bashrc
+  echo "alias vi=\"vim\"" >> ~/.bashrc
+  echo "alias ll=\"ls -la\"" >> ~/.bashrc
+  echo "[INFO]: Aliases configured"
+
   echo "export PATH=\"\$PATH:$USER_BIN_DIR\"" >> ~/.bash_profile
   . ~/.bash_profile
   echo "[INFO]: Bash profile updated"
